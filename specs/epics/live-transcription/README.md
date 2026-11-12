@@ -8,7 +8,7 @@ somebody else's in one landing.**
 
 | | |
 |---|---|
-| Status | In progress — LT0 on main |
+| Status | In progress — LT1 on main: the site runs on Workers |
 | Upstream | [deepgram-starters/nextjs-live-transcription](https://github.com/deepgram-starters/nextjs-live-transcription) (MIT, © 2023 Deepgram), at `6c88264` (2026-11-06) — Vercel's "Next.js Live Transcription" template |
 | Reference | [pdf-quiz-generator](https://github.com/sourceplane/pdf-quiz-generator) — the same scaffolding, tests, bootstrap, Workers AI through the binding with an optional key pushed to the Worker after the build, and the e2e's own Worker entry; [nitro-websockets](https://github.com/sourceplane/nitro-websockets) — WebSockets on Workers, tested with real clients |
 | Key | `LT` |
