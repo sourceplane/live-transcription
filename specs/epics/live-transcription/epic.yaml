@@ -9,7 +9,7 @@ metadata:
 spec:
   title: "Vercel's Next.js Live Transcription on Cloudflare Workers"
   summary: "Vercel's Next.js Live Transcription — Deepgram's starter: speak, and the page captions you live over a visualiser of your microphone — runs on Cloudflare Workers + Static Assets through @opennextjs/cloudflare, behind its own Worker entry that opens Deepgram's Nova-3 on Workers AI over a WebSocket through the Worker's binding with no key (Deepgram directly with the owner's optional key), inside the Cirrus baseline's repository conventions, and becomes an Orun baseline that takes a new transcription site from nothing to live on stage and prod in one landing."
-  state: started
+  state: completed
   milestones:
     - name: "LT0 — the spec"
       exitCriteria:

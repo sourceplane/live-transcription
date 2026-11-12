@@ -4,7 +4,11 @@
 |---|---|---|
 | LT0 — the spec | ✅ | the repository's first commit, LT-1 |
 | LT1 — the captions on Workers | ✅ | LT-2 |
-| LT2 — a baseline | planned | LT-3 |
+| LT2 — a baseline | ✅ | LT-3, tagged `baseline-v1` |
+
+Upstream: deepgram-starters/nextjs-live-transcription @ `6c882648ee02f063d652e383456674bcaa570f53`.
+Licence: MIT, as the root `LICENSE` reads ("Copyright (c) 2023 Deepgram";
+package.json has no `license`). It ships as `apps/web/LICENSE`.
 
 ## Departures from the upstream template
 
