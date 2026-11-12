@@ -1,0 +1,29 @@
+apiVersion: orun.io/v1
+kind: TaskContract
+metadata:
+  name: LT-3
+  title: "live-transcription becomes an Orun baseline"
+spec:
+  goal: blueprint.yaml and repo-blueprint.yaml take a new live-transcription site from nothing to live on stage and prod in one landing, held by Baseline CI
+  affects:
+    - blueprint.yaml
+    - repo-blueprint.yaml
+    - BOOTSTRAP.md
+    - .baseline
+    - .github/workflows/baseline.yml
+    - .github/workflows/tag.yml
+    - ai/context
+    - docs/phases
+    - hooks
+    - testing
+    - tooling/rebrand
+    - tooling/bootstrap
+    - tooling/catalog
+    - apps/web/docs
+    - tests/web/docs
+    - specs/epics/live-transcription
+    - README.md
+  doneWhen:
+    - every Baseline CI tier is green
+    - an app placed from it carries the app only, branded, with the template's own names, Deepgram's SDK identifiers and variable name and the Workers AI binding intact
+  gates: []
