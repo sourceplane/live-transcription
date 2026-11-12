@@ -5,9 +5,10 @@ Vercel's [Next.js Live Transcription](https://github.com/deepgram-starters/nextj
 Deepgram's live-transcription starter: speak, and the page captions you live,
 each word as it is heard, over a visualiser of your microphone — running on
 **Cloudflare Workers + Static Assets** through
-[`@opennextjs/cloudflare`](https://opennext.js.org/cloudflare), deployed by
-[Orun](https://github.com/sourceplane/orun) to stage and prod on every merge.
-Packaging it as an Orun baseline is the next milestone (LT2). It transcribes from its first deploy, on Workers AI, with no key.
+[`@opennextjs/cloudflare`](https://opennext.js.org/cloudflare), and packaged as
+an **Orun baseline**: one command takes a new transcription site from nothing to
+live on stage and prod, in its own repository, under its own name — in ONE
+landing. It transcribes from its first deploy, on Workers AI, with no key.
 
 The template's page, contexts and components are the code. What the port adds
 is the Workers build, the Worker's own entry, the monorepo wrapper, a test
@@ -31,9 +32,58 @@ force:
   keeps the MediaRecorder's WebM chunks, as upstream sends them.
 - **Next.js 14 → 15.5:** OpenNext 1.20.16 builds Next 15 from 15.5.29, so the
   template moves there, and to React 19 (two type-level changes in its own
-  code). See
+  code).
+
+What the baseline adds is everything needed to make a copy of it somebody
+else's — built the way
+[cirrus-baseline](https://github.com/sourceplane/cirrus-baseline) is. See
 [`specs/epics/live-transcription`](specs/epics/live-transcription/README.md) for the
 design, the milestones and the as-built status.
+
+## Instantiating a site
+
+```bash
+git clone --depth 1 --branch <baseline-tag> https://github.com/sourceplane/live-transcription
+cd live-transcription
+orun new --blueprint repo-blueprint.yaml --out ~/apps/acme-notes --run-hooks --resume \
+  --set reponame=acme-notes --set productname="Acme Notes" \
+  --set githuborg=acme-inc --set subdomain=<workers-dev-subdomain>
+```
+
+Or, once the platform's registry lists it, from the Orun console (Baselines →
+`live-transcription` → Build). Two phases — `01-product` (the repository, its CI and
+the whole app in one pull request, deployed to stage and prod by one
+convergence, smoke-tested) and `02-docs` (the live deployment recorded) —
+each landing one pull request in the new repository.
+**[BOOTSTRAP.md](BOOTSTRAP.md)** is the operator guide;
+[docs/phases/](docs/phases/README.md) has a page per phase.
+
+The new repository receives the **app only** — the app, its tests, its CI,
+its tooling, a README of its own and its operating contract — renamed
+throughout to the app's name, repository and Cloudflare Worker. None of this
+repository's machinery ships, and nothing that ships names it. The upstream
+template's own names — its repository and Vercel page, which end in this
+baseline's slug — are left as they are, and so are Deepgram's SDK names.
+
+The only provider the bootstrap asks for is Cloudflare: Workers AI is a
+binding on the same account, with nothing to provision. **Deepgram is not a
+provider the platform brokers**, so the app is built without a key, and its
+owner may store one afterwards — one optional Orun secret, `DEEPGRAM_API_KEY`,
+and a redeploy, which pushes it to the Worker as a secret. The app's README,
+"Use your own Deepgram key" (`.baseline/product/README.md` here), has the
+steps.
+
+| What makes it a baseline | Where |
+|---|---|
+| The console card (inputs, secrets, programme) | `blueprint.yaml` |
+| The build document (modules, phases, hooks) | `repo-blueprint.yaml` |
+| This tree's identity, and the bootstrap's task contracts | `.baseline/` |
+| The rename engine (the upstream's names and Deepgram's SDK names protected) | `tooling/rebrand/rebrand.mjs` |
+| The bootstrap's helpers (deferrals, redeploy marker, work-tree strip) | `tooling/bootstrap/` |
+| The deployment-record renderer, and its test without PyYAML | `hooks/render-deployment-docs.sh`, `testing/render.test.sh` |
+| The app's README and context pack | `.baseline/product/README.md`, `ai/context/` |
+| The baseline's tests: contract, leak, offline bootstrap, end to end (in-process stand-ins for Workers AI's Nova-3 and Deepgram's token grant; the page in headless Chrome on Linux) | `testing/`, `.github/workflows/baseline.yml` |
+| Cutting a `baseline-vN` tag | `.github/workflows/tag.yml` |
 
 ## What is here (the site)
 
@@ -100,3 +150,5 @@ pnpm dev                          # http://localhost:3000, transcribed by Deepgr
 | Workflow | What it runs | Ships to an app |
 |---|---|---|
 | `ci.yml` | the Orun pipeline, and the only workflow an app carries: `orun plan --changed`, then one job per lane. A pull request runs the verify lanes (the app built and dry-deployed per environment; they do not lint or run the tests), except the bootstrap's own landings (`orun/BASE-*`), where `plan` alone is the check; a merge deploys stage → prod. It plans nothing while `intent.yaml` names the placeholder workspace `ws_CHANGE_ME`, as this repository does. A manual run (Orunbase's Deploy button, or Run workflow on `main`) plans the environment and components it names under the push-to-main trigger, so they deploy as a merge deploys them | yes |
+| `baseline.yml` | the baseline's own tiers: contract tests (the deployment record rendered without PyYAML among them) and the component docs' drift check, the blueprint read by the pinned orun, the leak gate, the offline bootstrap, each landing installed, its fixture rendered, type-checked, linted, tested and built, then the app built in a staged job tree with the Deepgram key set and kept out of the build, dry-deployed with Workers AI bound, and served — a recording streamed over the socket to an in-process Nova-3 and captioned back, the page itself in headless Chrome captioning Chrome's fake microphone, then a Deepgram token minted with a key from an in-process Deepgram | no |
+| `tag.yml` | cuts a `baseline-vN` tag (manual) | no |
