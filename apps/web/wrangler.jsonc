@@ -1,0 +1,22 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "live-transcription-web",
+  // worker.ts answers the live-transcription socket (/api/listen) itself — a
+  // WebSocket upgrade a Next.js route handler cannot return — and hands every
+  // other request to the Worker @opennextjs/cloudflare builds
+  // (.open-next/worker.js). wrangler bundles the two into one Worker.
+  "main": "worker.ts",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  // Workers AI: Deepgram's Nova-3 speech-to-text, opened as a WebSocket through
+  // the binding (lib/listen.ts). A binding with no resource to provision and
+  // no key.
+  "ai": {
+    "binding": "AI"
+  },
+  "observability": { "enabled": true }
+}
