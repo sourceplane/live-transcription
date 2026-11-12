@@ -1,0 +1,19 @@
+apiVersion: orun.io/v1
+kind: TaskContract
+metadata:
+  name: LT-2
+  title: "The captions on Workers"
+spec:
+  goal: Vercel's Next.js Live Transcription runs on Cloudflare Workers + Static Assets through OpenNext, behind its own Worker entry that opens Deepgram's Nova-3 on Workers AI over a WebSocket through the binding with no key (Deepgram directly with the owner's optional key), with its tests and a README that says how it maps to Vercel
+  affects:
+    - apps/web
+    - tests/web
+    - tooling/wire
+    - pnpm-lock.yaml
+    - pnpm-workspace.yaml
+    - README.md
+    - .gitignore
+  doneWhen:
+    - pnpm typecheck, lint, test and build are green
+    - wrangler dev serves the page, and a recording streamed over /api/listen comes back as interim and final captions from a Nova-3 stand-in; with a Deepgram key, the token route mints a short-lived token from a Deepgram stand-in
+  gates: []

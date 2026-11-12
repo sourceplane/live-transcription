@@ -1,0 +1,32 @@
+# The epic's declaration. metadata.name equals the directory name; metadata.key
+# is the task-key prefix this epic reserves (LT → LT-1, LT-2, …). Owner, target
+# date and health are the platform's — never written here.
+apiVersion: orun.io/v1
+kind: Epic
+metadata:
+  name: live-transcription
+  key: LT
+spec:
+  title: "Vercel's Next.js Live Transcription on Cloudflare Workers"
+  summary: "Vercel's Next.js Live Transcription — Deepgram's starter: speak, and the page captions you live over a visualiser of your microphone — runs on Cloudflare Workers + Static Assets through @opennextjs/cloudflare, behind its own Worker entry that opens Deepgram's Nova-3 on Workers AI over a WebSocket through the Worker's binding with no key (Deepgram directly with the owner's optional key), inside the Cirrus baseline's repository conventions, and becomes an Orun baseline that takes a new transcription site from nothing to live on stage and prod in one landing."
+  state: started
+  milestones:
+    - name: "LT0 — the spec"
+      exitCriteria:
+        - "the repository is born with its intent, CI, tooling and spec index, and this doc set and the task contracts are on main"
+      tasks: [LT-1]
+    - name: "LT1 — the captions on Workers"
+      exitCriteria:
+        - "apps/web is the upstream template on Next.js 15.5 and React 19, built by OpenNext into one Worker with Static Assets behind worker.ts and bound to Workers AI"
+        - "with no key, /api/listen opens Nova-3 on Workers AI over a WebSocket through the binding and hands it to the page, which streams linear16 PCM from an AudioWorklet and captions Deepgram's Results with the template's own code"
+        - "with the owner's Deepgram key, the token route mints a short-lived token and the page streams to Deepgram directly; the key is read per request, never built in, never sent to the browser"
+        - "the socket refuses a plain request (426), another site's page (403) and a bad sample rate (400) before any model is opened"
+        - "`pnpm typecheck`, `pnpm lint`, `pnpm test` and `pnpm build` are green"
+        - "the README says how to run, test, preview and deploy it, how to use a Deepgram key, and how every Vercel piece maps to Cloudflare"
+      tasks: [LT-2]
+    - name: "LT2 — a baseline"
+      exitCriteria:
+        - "blueprint.yaml (the console card) and repo-blueprint.yaml (the build) take a new transcription site from nothing to live on stage and prod in one landing, then record it"
+        - "an app built from it carries the app only, renamed throughout to its own name, repository and Worker, with the template's own names, Deepgram's SDK identifiers and variable name and the Workers AI binding intact"
+        - "Baseline CI is green: contract tests (the deployment record rendered without PyYAML among them), generated component docs, the blueprint read by the pinned orun, the leak gate, the offline bootstrap and the end-to-end tier (the page in headless Chrome among it)"
+      tasks: [LT-3]
